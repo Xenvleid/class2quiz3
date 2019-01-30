@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+            body {
+                text-align: center;
+            }
+        </style>
+    <title>Quiz3</title>
+</head>
+<body>
+    <h1>Who said this quote?</h1>
+    <div class='quiz' id="quoteContainer"></div>
+    <div id='results'></div>
+
+    <input id="radioAuthor1" type="radio" name="author"/><span id="author1">Radio1</span><br/>
+    <input id="radioAuthor2" type="radio" name="author"/><span id="author2">Radio2</span><br/> 
+    <input id="radioAuthor3" type="radio" name="author"/><span id="author3">Radio3</span><br/>
+
+    <button onclick='checkAnswer()'>Submit</button>
+
+    <!-- 0. Create static HTML elements
+    1. Obtain all quotes
+    2. Select three random quotes
+    3. Show a quote on the screen
+    4. Show the three authors on screen
+    5. if the right author is selected, alert "You Won!"
+    6. if incorrect "Wrong choice, the correct answer was AUTHOR" -->
+
+    <script type="text/javascript">
+        var answerSheet = "";
+
+        fetch('http://api.techlaunch.io/quotes/all.php').then(function(response) {
+            response.json().then(function(data) {
+            var quoteContainer = document.getElementById('quoteContainer');
+            var author1 = document.getElementById('author1');
+            var author2 = document.getElementById('author2');
+            var author3 = document.getElementById('author3');
+            var radioAuthor1 = document.getElementById('radioAuthor1');
+            var radioAuthor2 = document.getElementById('radioAuthor2');
+            var radioAuthor3 = document.getElementById('radioAuthor3');
+            var random1 = Math.floor(Math.random() * data.length);
+            var random2 = Math.floor(Math.random() * data.length);
+            var random3 = Math.floor(Math.random() * data.length);
+
+            answerSheet = data[random1].author;
+
+            var randomQuote1 = data[random1].text;
+            document.getElementById('quoteContainer').textContent = randomQuote1;
+
+            var randomAuthor1 = data[random1].author;
+            document.getElementById('author1').textContent = randomAuthor1;
+            radioAuthor1.value = randomAuthor1;
+
+            var randomAuthor2 = data[random2].author;
+            document.getElementById('author2').textContent = randomAuthor2;
+            radioAuthor2.value = randomAuthor2;
+
+            var randomAuthor3 = data[random3].author;
+            document.getElementById('author3').textContent = randomAuthor3;
+            radioAuthor3.value = randomAuthor3;
+        });
+        });
+
+        function checkAnswer() {
+            var userSelection = document.querySelector('input[name="author"]:checked').value;
+
+            if(userSelection == answerSheet) {
+                alert("You Won!");
+            }else{
+                alert("Wrong choice, the correct answer was " + answerSheet);
+            }
+        };
+
+    </script>
+</body>
+</html> 
